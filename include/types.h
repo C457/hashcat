@@ -1032,7 +1032,8 @@ typedef struct hashconfig
   u32   dgst_pos1;
   u32   dgst_pos2;
   u32   dgst_pos3;
-
+  u32   dgst_pos4;
+  
   bool  is_salted;
 
   bool  has_pure_kernel;
@@ -2172,7 +2173,7 @@ typedef struct pot_tree_entry
   pot_hash_node_t *nodes; // head of the linked list (under the field "hash_buf" it contains the sorting keys)
 
   // the hashconfig is required to distinguish between salted and non-salted hashes and to make sure
-  // we compare the correct dgst_pos0...dgst_pos3
+  // we compare the correct dgst_pos0...dgst_pos4
 
   hashconfig_t *hashconfig;
 
@@ -2898,6 +2899,7 @@ typedef struct module_ctx
   u32         (*module_dgst_pos1)               (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
   u32         (*module_dgst_pos2)               (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
   u32         (*module_dgst_pos3)               (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
+  u32         (*module_dgst_pos4)               (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
   u32         (*module_dgst_size)               (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
   bool        (*module_dictstat_disable)        (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);
   u64         (*module_esalt_size)              (const hashconfig_t *, const user_options_t *, const user_options_extra_t *);

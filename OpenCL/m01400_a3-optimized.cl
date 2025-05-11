@@ -154,12 +154,13 @@ DECLSPEC void m01400s (PRIVATE_AS u32 *w, const u32 pw_len, KERN_ATTR_FUNC_VECTO
    * digest
    */
 
-  const u32 search[4] =
+  const u32 search[5] =
   {
     digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R0],
     digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R1],
     digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R2],
-    digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R3]
+    digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R3],
+    digests_buf[DIGESTS_OFFSET_HOST].digest_buf[DGST_R4]
   };
 
   /**
@@ -279,7 +280,7 @@ DECLSPEC void m01400s (PRIVATE_AS u32 *w, const u32 pw_len, KERN_ATTR_FUNC_VECTO
     w7_t = SHA256_EXPAND (w5_t, w0_t, w8_t, w7_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, b, c, d, e, f, g, h, a, w7_t, SHA256C37);
     w8_t = SHA256_EXPAND (w6_t, w1_t, w9_t, w8_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, a, b, c, d, e, f, g, h, w8_t, SHA256C38);
 
-    if (MATCHES_NONE_VS (h, d_rev)) continue;
+    //if (MATCHES_NONE_VS (h, d_rev)) continue;
 
     w9_t = SHA256_EXPAND (w7_t, w2_t, wa_t, w9_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, h, a, b, c, d, e, f, g, w9_t, SHA256C39);
     wa_t = SHA256_EXPAND (w8_t, w3_t, wb_t, wa_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, g, h, a, b, c, d, e, f, wa_t, SHA256C3a);
@@ -289,7 +290,11 @@ DECLSPEC void m01400s (PRIVATE_AS u32 *w, const u32 pw_len, KERN_ATTR_FUNC_VECTO
     we_t = SHA256_EXPAND (wc_t, w7_t, wf_t, we_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, c, d, e, f, g, h, a, b, we_t, SHA256C3e);
     wf_t = SHA256_EXPAND (wd_t, w8_t, w0_t, wf_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, b, c, d, e, f, g, h, a, wf_t, SHA256C3f);
 
-    COMPARE_S_SIMD (d, h, c, g);
+    if ((a != search[0]) ||
+        (b != search[1]) ||
+        (c != search[2]) ||
+        (d != search[3]) ||
+        (e != search[4])) continue;
   }
 }
 

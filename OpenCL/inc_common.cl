@@ -1968,6 +1968,8 @@ DECLSPEC int ffz (const u32 v)
 #ifdef KERNEL_STATIC
 DECLSPEC int hash_comp (PRIVATE_AS const u32 *d1, GLOBAL_AS const u32 *d2)
 {
+  if (d1[4] > d2[DGST_R4]) return ( 1);
+  if (d1[4] < d2[DGST_R4]) return (-1);
   if (d1[3] > d2[DGST_R3]) return ( 1);
   if (d1[3] < d2[DGST_R3]) return (-1);
   if (d1[2] > d2[DGST_R2]) return ( 1);

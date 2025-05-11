@@ -15,7 +15,8 @@ static const u32   DGST_POS0      = 3;
 static const u32   DGST_POS1      = 7;
 static const u32   DGST_POS2      = 2;
 static const u32   DGST_POS3      = 6;
-static const u32   DGST_SIZE      = DGST_SIZE_4_8;
+static const u32   DGST_POS4      = 4;
+static const u32   DGST_SIZE      = DGST_SIZE_4_5;
 static const u32   HASH_CATEGORY  = HASH_CATEGORY_RAW_HASH;
 static const char *HASH_NAME      = "SHA2-256";
 static const u64   KERN_TYPE      = 1400;
@@ -31,13 +32,14 @@ static const u64   OPTS_TYPE      = OPTS_TYPE_STOCK_MODULE
                                   | OPTS_TYPE_PT_ADDBITS15;
 static const u32   SALT_TYPE      = SALT_TYPE_NONE;
 static const char *ST_PASS        = "hashcat";
-static const char *ST_HASH        = "127e6fbfe24a750e72930c220a8e138275656b8e5d8f48a98c3c92df2caba935";
+static const char *ST_HASH        = "127e6fbfe24a750e72930c220a8e138275656b8e";
 
 u32         module_attack_exec    (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC;     }
 u32         module_dgst_pos0      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS0;       }
 u32         module_dgst_pos1      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS1;       }
 u32         module_dgst_pos2      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS2;       }
 u32         module_dgst_pos3      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS3;       }
+u32         module_dgst_pos4      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS4;       }
 u32         module_dgst_size      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_SIZE;       }
 u32         module_hash_category  (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return HASH_CATEGORY;   }
 const char *module_hash_name      (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return HASH_NAME;       }
@@ -58,7 +60,7 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
 
   token.token_cnt  = 1;
 
-  token.len[0]     = 64;
+  token.len[0]     = 40;
   token.attr[0]    = TOKEN_ATTR_FIXED_LENGTH
                    | TOKEN_ATTR_VERIFY_HEX;
 
@@ -73,18 +75,12 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
   digest[2] = hex_to_u32 (hash_pos + 16);
   digest[3] = hex_to_u32 (hash_pos + 24);
   digest[4] = hex_to_u32 (hash_pos + 32);
-  digest[5] = hex_to_u32 (hash_pos + 40);
-  digest[6] = hex_to_u32 (hash_pos + 48);
-  digest[7] = hex_to_u32 (hash_pos + 56);
 
   digest[0] = byte_swap_32 (digest[0]);
   digest[1] = byte_swap_32 (digest[1]);
   digest[2] = byte_swap_32 (digest[2]);
   digest[3] = byte_swap_32 (digest[3]);
   digest[4] = byte_swap_32 (digest[4]);
-  digest[5] = byte_swap_32 (digest[5]);
-  digest[6] = byte_swap_32 (digest[6]);
-  digest[7] = byte_swap_32 (digest[7]);
 
   if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
   {
@@ -93,9 +89,6 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
     digest[2] -= SHA256M_C;
     digest[3] -= SHA256M_D;
     digest[4] -= SHA256M_E;
-    digest[5] -= SHA256M_F;
-    digest[6] -= SHA256M_G;
-    digest[7] -= SHA256M_H;
   }
 
   return (PARSER_OK);
@@ -115,9 +108,6 @@ int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
   tmp[2] = digest[2];
   tmp[3] = digest[3];
   tmp[4] = digest[4];
-  tmp[5] = digest[5];
-  tmp[6] = digest[6];
-  tmp[7] = digest[7];
 
   if (hashconfig->opti_type & OPTI_TYPE_OPTIMIZED_KERNEL)
   {
@@ -126,9 +116,6 @@ int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
     tmp[2] += SHA256M_C;
     tmp[3] += SHA256M_D;
     tmp[4] += SHA256M_E;
-    tmp[5] += SHA256M_F;
-    tmp[6] += SHA256M_G;
-    tmp[7] += SHA256M_H;
   }
 
   tmp[0] = byte_swap_32 (tmp[0]);
@@ -136,9 +123,6 @@ int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
   tmp[2] = byte_swap_32 (tmp[2]);
   tmp[3] = byte_swap_32 (tmp[3]);
   tmp[4] = byte_swap_32 (tmp[4]);
-  tmp[5] = byte_swap_32 (tmp[5]);
-  tmp[6] = byte_swap_32 (tmp[6]);
-  tmp[7] = byte_swap_32 (tmp[7]);
 
   u8 *out_buf = (u8 *) line_buf;
 
@@ -147,11 +131,8 @@ int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
   u32_to_hex (tmp[2], out_buf + 16);
   u32_to_hex (tmp[3], out_buf + 24);
   u32_to_hex (tmp[4], out_buf + 32);
-  u32_to_hex (tmp[5], out_buf + 40);
-  u32_to_hex (tmp[6], out_buf + 48);
-  u32_to_hex (tmp[7], out_buf + 56);
 
-  const int out_len = 64;
+  const int out_len = 40;
 
   return out_len;
 }
@@ -174,6 +155,7 @@ void module_init (module_ctx_t *module_ctx)
   module_ctx->module_dgst_pos1                = module_dgst_pos1;
   module_ctx->module_dgst_pos2                = module_dgst_pos2;
   module_ctx->module_dgst_pos3                = module_dgst_pos3;
+  module_ctx->module_dgst_pos4                = module_dgst_pos4;
   module_ctx->module_dgst_size                = module_dgst_size;
   module_ctx->module_dictstat_disable         = MODULE_DEFAULT;
   module_ctx->module_esalt_size               = MODULE_DEFAULT;

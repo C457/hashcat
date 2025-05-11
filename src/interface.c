@@ -160,6 +160,7 @@ int hashconfig_init (hashcat_ctx_t *hashcat_ctx)
   CHECK_DEFINED (module_ctx->module_dgst_pos1);
   CHECK_DEFINED (module_ctx->module_dgst_pos2);
   CHECK_DEFINED (module_ctx->module_dgst_pos3);
+  CHECK_DEFINED (module_ctx->module_dgst_pos4);
   CHECK_DEFINED (module_ctx->module_dgst_size);
   CHECK_DEFINED (module_ctx->module_dictstat_disable);
   CHECK_DEFINED (module_ctx->module_esalt_size);
@@ -238,6 +239,7 @@ int hashconfig_init (hashcat_ctx_t *hashcat_ctx)
   CHECK_MANDATORY (module_ctx->module_dgst_pos1);
   CHECK_MANDATORY (module_ctx->module_dgst_pos2);
   CHECK_MANDATORY (module_ctx->module_dgst_pos3);
+  CHECK_MANDATORY (module_ctx->module_dgst_pos4);
   CHECK_MANDATORY (module_ctx->module_dgst_size);
   CHECK_MANDATORY (module_ctx->module_hash_decode);
   // CHECK_MANDATORY (module_ctx->module_hash_encode); we do that one later
@@ -255,6 +257,7 @@ int hashconfig_init (hashcat_ctx_t *hashcat_ctx)
   hashconfig->dgst_pos1     = module_ctx->module_dgst_pos1      (hashconfig, user_options, user_options_extra);
   hashconfig->dgst_pos2     = module_ctx->module_dgst_pos2      (hashconfig, user_options, user_options_extra);
   hashconfig->dgst_pos3     = module_ctx->module_dgst_pos3      (hashconfig, user_options, user_options_extra);
+  hashconfig->dgst_pos4     = module_ctx->module_dgst_pos4      (hashconfig, user_options, user_options_extra);
   hashconfig->dgst_size     = module_ctx->module_dgst_size      (hashconfig, user_options, user_options_extra);
   hashconfig->hash_category = module_ctx->module_hash_category  (hashconfig, user_options, user_options_extra);
   hashconfig->hash_name     = module_ctx->module_hash_name      (hashconfig, user_options, user_options_extra);
